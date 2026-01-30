@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabase";
-import PromptInput from "./components/PromptInput";
+import PromptModal from "./components/PromptModal";
 import DynamicContent from "./components/DynamicContent";
 
 const DEFAULT_PAGE_SLUG = "main";
@@ -9,6 +9,7 @@ function App() {
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchPage();
@@ -81,18 +82,14 @@ function App() {
     }
   }
 
+  const handleModalSubmit = (prompt) => {
+    setIsModalOpen(false);
+    handlePromptSubmit(prompt);
+  };
+
   return (
     <div className="app">
-      <header className="header">
-        <h1>Prompt Page</h1>
-      </header>
-
       <main className="main">
-        <aside className="sidebar">
-          <h2>Modify Page</h2>
-          <PromptInput onSubmit={handlePromptSubmit} status={status} />
-        </aside>
-
         <div className="canvas-container">
           <div className="canvas">
             <DynamicContent
@@ -103,6 +100,24 @@ function App() {
           </div>
         </div>
       </main>
+
+      <button
+        className="fab"
+        onClick={() => setIsModalOpen(true)}
+        disabled={status === "loading"}
+        title="Create with AI"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+
+      <PromptModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleModalSubmit}
+        status={status}
+      />
     </div>
   );
 }
