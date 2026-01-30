@@ -68,6 +68,11 @@ function App() {
         throw new Error('Failed to generate content')
       }
 
+      const result = await response.json()
+      if (result.page) {
+        setPage(result.page)
+      }
+
       setStatus('success')
       setTimeout(() => setStatus(''), 2000)
     } catch (error) {
