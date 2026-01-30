@@ -1,9 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
-import { config } from "../config/index.js";
+
+import { config } from "@/config/index.js";
 
 const supabase = createClient(config.supabaseUrl, config.supabaseServiceKey);
 
-export async function upsertPage(slug, content) {
+export interface Page {
+  id: string;
+  slug: string;
+  content: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export const upsertPage = async (
+  slug: string,
+  content: string
+): Promise<Page> => {
   const { data, error } = await supabase
     .from("pages")
     .upsert(
@@ -21,10 +33,10 @@ export async function upsertPage(slug, content) {
     throw error;
   }
 
-  return data;
-}
+  return data as Page;
+};
 
-export async function getPage(slug) {
+export const getPage = async (slug: string): Promise<Page | null> => {
   const { data, error } = await supabase
     .from("pages")
     .select("*")
@@ -35,5 +47,5 @@ export async function getPage(slug) {
     throw error;
   }
 
-  return data;
-}
+  return data as Page | null;
+};

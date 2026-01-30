@@ -92,8 +92,18 @@ const ALLOWED_ATTR = [
 
 const FORBID_TAGS = ["iframe", "object", "embed"];
 
-export function extractScripts(content) {
-  const scripts = [];
+export interface ExtractedScripts {
+  scripts: string[];
+  contentWithoutScripts: string;
+}
+
+export interface SanitizeResult {
+  sanitized: string;
+  scriptCount: number;
+}
+
+export const extractScripts = (content: string): ExtractedScripts => {
+  const scripts: string[] = [];
   const contentWithoutScripts = content.replace(
     /<script\b[^>]*>([\s\S]*?)<\/script>/gi,
     (match) => {
@@ -103,17 +113,15 @@ export function extractScripts(content) {
   );
 
   return { scripts, contentWithoutScripts };
-}
+};
 
-export function sanitizeHtml(content) {
-  return DOMPurify.sanitize(content, {
-    ALLOWED_TAGS,
-    ALLOWED_ATTR,
-    FORBID_TAGS,
-  });
-}
+export const sanitizeHtml = (content: string): string => DOMPurify.sanitize(content, {
+  ALLOWED_TAGS,
+  ALLOWED_ATTR,
+  FORBID_TAGS,
+});
 
-export function sanitizeContent(content) {
+export const sanitizeContent = (content: string): SanitizeResult => {
   const { scripts, contentWithoutScripts } = extractScripts(content);
   let sanitized = sanitizeHtml(contentWithoutScripts);
 
@@ -122,4 +130,4 @@ export function sanitizeContent(content) {
   }
 
   return { sanitized, scriptCount: scripts.length };
-}
+};
