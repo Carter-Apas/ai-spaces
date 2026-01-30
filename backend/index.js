@@ -3,10 +3,22 @@ import express from 'express'
 import cors from 'cors'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
+import DOMPurify from 'isomorphic-dompurify'
+import pino from 'pino'
+import pinoHttp from 'pino-http'
+
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  transport: process.env.NODE_ENV !== 'production' ? {
+    target: 'pino/file',
+    options: { destination: 1 }
+  } : undefined,
+})
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(pinoHttp({ logger }))
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -60,13 +72,36 @@ app.post('/api/generate', async (req, res) => {
 
     const generatedContent = message.content[0].text
 
+    // Sanitize HTML to prevent XSS attacks
+    const sanitizedContent = DOMPurify.sanitize(generatedContent, {
+      ALLOWED_TAGS: [
+        'div', 'span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li', 'a', 'img', 'button', 'input', 'form',
+        'table', 'thead', 'tbody', 'tr', 'th', 'td',
+        'header', 'footer', 'nav', 'main', 'section', 'article', 'aside',
+        'strong', 'em', 'b', 'i', 'u', 'br', 'hr',
+        'label', 'select', 'option', 'textarea',
+        'svg', 'path', 'circle', 'rect', 'line', 'polyline', 'polygon',
+        'style'
+      ],
+      ALLOWED_ATTR: [
+        'style', 'class', 'id', 'href', 'src', 'alt', 'title',
+        'type', 'name', 'value', 'placeholder', 'disabled', 'readonly',
+        'width', 'height', 'viewBox', 'fill', 'stroke', 'stroke-width',
+        'd', 'cx', 'cy', 'r', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'points',
+        'for', 'rows', 'cols', 'target', 'rel'
+      ],
+      FORBID_TAGS: ['script', 'iframe', 'object', 'embed'],
+      FORBID_ATTR: ['onerror', 'onclick', 'onload', 'onmouseover'],
+    })
+
     // Upsert to database
     const { data, error } = await supabase
       .from('pages')
       .upsert(
         {
           slug,
-          content: generatedContent,
+          content: sanitizedContent,
           updated_at: new Date().toISOString(),
         },
         { onConflict: 'slug' }
@@ -75,18 +110,20 @@ app.post('/api/generate', async (req, res) => {
       .single()
 
     if (error) {
-      console.error('Supabase error:', error)
+      logger.error({ err: error, slug }, 'Supabase upsert failed')
       return res.status(500).json({ error: 'Failed to save content' })
     }
 
+    logger.info({ slug, contentLength: sanitizedContent.length }, 'Page generated successfully')
+
     res.json({ success: true, page: data })
   } catch (error) {
-    console.error('Error:', error)
+    logger.error({ err: error }, 'Failed to generate content')
     res.status(500).json({ error: 'Failed to generate content' })
   }
 })
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  logger.info({ port: PORT }, 'Server started')
 })
