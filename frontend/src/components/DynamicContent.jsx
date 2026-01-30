@@ -1,37 +1,45 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react";
 
 function DynamicContent({ content, loading, generating }) {
-  const contentRef = useRef(null)
+  const contentRef = useRef(null);
 
   useEffect(() => {
-    if (!contentRef.current || !content) return
+    if (!contentRef.current || !content) return;
 
     // Find all script tags in the content
-    const scripts = contentRef.current.querySelectorAll('script')
+    const scripts = contentRef.current.querySelectorAll("script");
 
     scripts.forEach((oldScript) => {
       // Create a new script element to trigger execution
-      const newScript = document.createElement('script')
+      const newScript = document.createElement("script");
 
       // Copy all attributes
       Array.from(oldScript.attributes).forEach((attr) => {
-        newScript.setAttribute(attr.name, attr.value)
-      })
+        newScript.setAttribute(attr.name, attr.value);
+      });
 
       // Copy the script content
-      newScript.textContent = oldScript.textContent
+      newScript.textContent = oldScript.textContent;
 
       // Replace the old script with the new one to trigger execution
-      oldScript.parentNode.replaceChild(newScript, oldScript)
-    })
-  }, [content])
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+  }, [content]);
 
   if (loading) {
     return (
-      <div className="canvas-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+      <div
+        className="canvas-content"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#888",
+        }}
+      >
         Loading...
       </div>
-    )
+    );
   }
 
   if (!content) {
@@ -46,7 +54,7 @@ function DynamicContent({ content, loading, generating }) {
           <span>Enter a prompt to generate content</span>
         )}
       </div>
-    )
+    );
   }
 
   return (
@@ -63,7 +71,7 @@ function DynamicContent({ content, loading, generating }) {
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>
-  )
+  );
 }
 
-export default DynamicContent
+export default DynamicContent;

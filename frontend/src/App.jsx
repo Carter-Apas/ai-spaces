@@ -1,83 +1,83 @@
-import { useState, useEffect } from 'react'
-import { supabase } from './lib/supabase'
-import PromptInput from './components/PromptInput'
-import DynamicContent from './components/DynamicContent'
+import { useState, useEffect } from "react";
+import { supabase } from "./lib/supabase";
+import PromptInput from "./components/PromptInput";
+import DynamicContent from "./components/DynamicContent";
 
-const DEFAULT_PAGE_SLUG = 'main'
+const DEFAULT_PAGE_SLUG = "main";
 
 function App() {
-  const [page, setPage] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [status, setStatus] = useState('')
+  const [page, setPage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    fetchPage()
+    fetchPage();
 
     // Subscribe to real-time updates
     const channel = supabase
-      .channel('pages-changes')
+      .channel("pages-changes")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'pages',
+          event: "*",
+          schema: "public",
+          table: "pages",
           filter: `slug=eq.${DEFAULT_PAGE_SLUG}`,
         },
         (payload) => {
-          console.log('Real-time update:', payload)
+          console.log("Real-time update:", payload);
           if (payload.new) {
-            setPage(payload.new)
+            setPage(payload.new);
           }
-        }
+        },
       )
-      .subscribe()
+      .subscribe();
 
     return () => {
-      supabase.removeChannel(channel)
-    }
-  }, [])
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   async function fetchPage() {
-    setLoading(true)
+    setLoading(true);
     const { data, error } = await supabase
-      .from('pages')
-      .select('*')
-      .eq('slug', DEFAULT_PAGE_SLUG)
-      .single()
+      .from("pages")
+      .select("*")
+      .eq("slug", DEFAULT_PAGE_SLUG)
+      .single();
 
-    if (error && error.code !== 'PGRST116') {
-      console.error('Error fetching page:', error)
+    if (error && error.code !== "PGRST116") {
+      console.error("Error fetching page:", error);
     }
 
-    setPage(data)
-    setLoading(false)
+    setPage(data);
+    setLoading(false);
   }
 
   async function handlePromptSubmit(prompt) {
-    setStatus('loading')
+    setStatus("loading");
 
     try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt, slug: DEFAULT_PAGE_SLUG }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to generate content')
+        throw new Error("Failed to generate content");
       }
 
-      const result = await response.json()
+      const result = await response.json();
       if (result.page) {
-        setPage(result.page)
+        setPage(result.page);
       }
 
-      setStatus('success')
-      setTimeout(() => setStatus(''), 2000)
+      setStatus("success");
+      setTimeout(() => setStatus(""), 2000);
     } catch (error) {
-      console.error('Error:', error)
-      setStatus('error')
+      console.error("Error:", error);
+      setStatus("error");
     }
   }
 
@@ -95,12 +95,16 @@ function App() {
 
         <div className="canvas-container">
           <div className="canvas">
-            <DynamicContent content={page?.content} loading={loading} generating={status === 'loading'} />
+            <DynamicContent
+              content={page?.content}
+              loading={loading}
+              generating={status === "loading"}
+            />
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

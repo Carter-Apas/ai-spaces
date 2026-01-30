@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 function PromptInput({ onSubmit, status }) {
-  const [prompt, setPrompt] = useState('')
+  const [prompt, setPrompt] = useState("");
 
   function handleSubmit(e) {
-    e.preventDefault()
-    if (!prompt.trim() || status === 'loading') return
-    onSubmit(prompt)
-    setPrompt('')
+    e.preventDefault();
+    if (!prompt.trim() || status === "loading") return;
+    onSubmit(prompt);
+    setPrompt("");
   }
 
   return (
@@ -19,20 +19,20 @@ function PromptInput({ onSubmit, status }) {
         placeholder="Describe how to change the page...
 
 e.g. 'Add a blue header that says Welcome' or 'Create a grid of 3 cards with product info'"
-        disabled={status === 'loading'}
+        disabled={status === "loading"}
       />
       <button
         type="submit"
         className="submit-btn"
-        disabled={!prompt.trim() || status === 'loading'}
+        disabled={!prompt.trim() || status === "loading"}
       >
-        {status === 'loading' ? 'Generating...' : 'Generate'}
+        {status === "loading" ? "Generating..." : "Generate"}
       </button>
-      {status === 'error' && (
+      {status === "error" && (
         <p className="status error">Failed to generate. Try again.</p>
       )}
     </form>
-  )
+  );
 }
 
-export default PromptInput
+export default PromptInput;
