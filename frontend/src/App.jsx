@@ -90,7 +90,7 @@ function App() {
 
         <div className="canvas-container">
           <div className="canvas">
-            <DynamicContent content={page?.content} loading={loading} />
+            <DynamicContent content={page?.content} loading={loading} generating={status === 'loading'} />
           </div>
         </div>
       </main>

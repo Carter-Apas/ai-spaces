@@ -127,3 +127,53 @@ body {
 .status.error {
   color: #ff6b6b;
 }
+
+.canvas-content-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.canvas-content--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+
+.spinner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 10;
+  color: #333;
+  font-size: 1rem;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: #888;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #646cff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
