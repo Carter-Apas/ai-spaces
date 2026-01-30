@@ -94,6 +94,7 @@ function App() {
           <div className="canvas">
             <DynamicContent
               content={page?.content}
+              contentType={page?.content_type || "html"}
               loading={loading}
               generating={status === "loading"}
             />

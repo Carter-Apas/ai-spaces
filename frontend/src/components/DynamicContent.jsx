@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 
-function DynamicContent({ content, loading, generating }) {
+function DynamicContent({ content, contentType = "html", loading, generating }) {
   const contentRef = useRef(null);
 
   useEffect(() => {
-    if (!contentRef.current || !content) return;
+    if (!contentRef.current || !content || contentType !== "html") return;
 
     // Find all script tags in the content
     const scripts = contentRef.current.querySelectorAll("script");
@@ -24,7 +24,7 @@ function DynamicContent({ content, loading, generating }) {
       // Replace the old script with the new one to trigger execution
       oldScript.parentNode.replaceChild(newScript, oldScript);
     });
-  }, [content]);
+  }, [content, contentType]);
 
   if (loading) {
     return (
@@ -51,12 +51,30 @@ function DynamicContent({ content, loading, generating }) {
             <span>Generating...</span>
           </div>
         ) : (
-          <span>Enter a prompt to generate content</span>
+          <span>Click the + button to create something</span>
         )}
       </div>
     );
   }
 
+  // Render image content
+  if (contentType === "image") {
+    return (
+      <div className="canvas-content-wrapper">
+        {generating && (
+          <div className="spinner-overlay">
+            <div className="spinner" />
+            <span>Generating...</span>
+          </div>
+        )}
+        <div className="canvas-content canvas-content--image">
+          <img src={content} alt="Generated content" />
+        </div>
+      </div>
+    );
+  }
+
+  // Render HTML content
   return (
     <div className="canvas-content-wrapper">
       {generating && (
