@@ -123,9 +123,14 @@ docker build -t prompt-canvas-backend ./backend
 # Run backend
 docker run -p 3001:3001 --env-file ./backend/.env prompt-canvas-backend
 
-# Run frontend
+# Run frontend (same Docker network as backend)
 docker run -p 80:80 prompt-canvas-frontend
+
+# Run frontend (pointing to external backend)
+docker run -p 80:80 -e BACKEND_URL=https://api.example.com prompt-canvas-frontend
 ```
+
+The frontend uses `BACKEND_URL` environment variable to configure the API proxy. Default is `http://backend:3001` for Docker Compose setups.
 
 ### Docker Compose (example)
 
@@ -136,6 +141,8 @@ services:
     image: ghcr.io/your-username/your-repo/frontend:latest
     ports:
       - "80:80"
+    environment:
+      - BACKEND_URL=http://backend:3001
     depends_on:
       - backend
 
@@ -173,10 +180,12 @@ git commit -m "feat(backend)!: change API response format"
 
 ### Release Flow
 
+Frontend and backend have **separate release PRs** and are versioned independently:
+
 1. Push commits to `master` with conventional commit messages
-2. Release Please creates/updates a Release PR
-3. Merge the Release PR to create a GitHub release
-4. Docker images are automatically built and pushed to ghcr.io
+2. Release Please creates/updates separate PRs for frontend and backend
+3. Merge a Release PR to create a GitHub release for that package
+4. Docker image is automatically built and pushed to ghcr.io for the released package
 
 ### Docker Images
 
