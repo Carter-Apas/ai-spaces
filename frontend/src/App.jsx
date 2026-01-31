@@ -18,7 +18,7 @@ function App() {
         return prev.map((canvas) =>
           canvas.slug === slug
             ? { ...canvas, page: pageData, loading: false }
-            : canvas
+            : canvas,
         );
       } else {
         // Add new canvas if it doesn't exist (from real-time update)
@@ -50,14 +50,20 @@ function App() {
       });
 
       // Ensure we have at least 4 canvases
-      const maxId = existingCanvases.length > 0
-        ? Math.max(...existingCanvases.map((c) => c.id))
-        : 0;
+      const maxId =
+        existingCanvases.length > 0
+          ? Math.max(...existingCanvases.map((c) => c.id))
+          : 0;
 
       const allCanvases = [...existingCanvases];
       for (let i = 1; i <= Math.max(4, maxId); i++) {
         if (!allCanvases.some((c) => c.id === i)) {
-          allCanvases.push({ id: i, slug: `canvas-${i}`, page: null, loading: false });
+          allCanvases.push({
+            id: i,
+            slug: `canvas-${i}`,
+            page: null,
+            loading: false,
+          });
         }
       }
 
@@ -85,7 +91,7 @@ function App() {
           if (payload.new && payload.new.slug) {
             updateCanvasPage(payload.new.slug, payload.new);
           }
-        }
+        },
       )
       .subscribe();
 
@@ -137,7 +143,8 @@ function App() {
   };
 
   const addCanvas = () => {
-    const newId = canvases.length > 0 ? Math.max(...canvases.map((c) => c.id)) + 1 : 1;
+    const newId =
+      canvases.length > 0 ? Math.max(...canvases.map((c) => c.id)) + 1 : 1;
     setCanvases((prev) => [
       ...prev,
       { id: newId, slug: `canvas-${newId}`, page: null, loading: false },
@@ -191,7 +198,11 @@ function App() {
                 <button
                   className="canvas-header-btn"
                   onClick={(e) => toggleFullscreen(canvas.id, e)}
-                  title={fullscreenCanvasId === canvas.id ? "Exit fullscreen" : "Fullscreen"}
+                  title={
+                    fullscreenCanvasId === canvas.id
+                      ? "Exit fullscreen"
+                      : "Fullscreen"
+                  }
                 >
                   {fullscreenCanvasId === canvas.id ? (
                     <svg

@@ -50,7 +50,10 @@ generateRouter.post(
 
         // Save to database
         const page = await upsertPage(slug, publicUrl, "image");
-        logger.info({ slug, imageUrl: publicUrl }, "Image generated successfully");
+        logger.info(
+          { slug, imageUrl: publicUrl },
+          "Image generated successfully",
+        );
 
         res.json({ success: true, page });
       } else {
@@ -64,7 +67,7 @@ generateRouter.post(
         if (!safetyResult.safe) {
           logger.warn(
             { slug, reason: safetyResult.reason },
-            "Content failed safety check"
+            "Content failed safety check",
           );
           res.status(400).json({
             error: "Generated content failed safety check",
@@ -83,7 +86,7 @@ generateRouter.post(
         const page = await upsertPage(slug, sanitized, "html");
         logger.info(
           { slug, contentLength: sanitized.length },
-          "Page generated successfully"
+          "Page generated successfully",
         );
 
         res.json({ success: true, page });
@@ -92,7 +95,7 @@ generateRouter.post(
       logger.error({ err: error }, "Failed to generate content");
       res.status(500).json({ error: "Failed to generate content" });
     }
-  }
+  },
 );
 
 export { generateRouter };

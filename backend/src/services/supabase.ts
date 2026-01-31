@@ -18,7 +18,7 @@ export interface Page {
 export const upsertPage = async (
   slug: string,
   content: string,
-  contentType: ContentType = "html"
+  contentType: ContentType = "html",
 ): Promise<Page> => {
   const { data, error } = await supabase
     .from("pages")
@@ -29,7 +29,7 @@ export const upsertPage = async (
         content_type: contentType,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: "slug" }
+      { onConflict: "slug" },
     )
     .select()
     .single();

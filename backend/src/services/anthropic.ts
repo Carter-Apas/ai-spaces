@@ -41,7 +41,7 @@ export const generateContent = async (prompt: string): Promise<string> => {
 };
 
 export const checkContentSafety = async (
-  content: string
+  content: string,
 ): Promise<SafetyResult> => {
   const message = await anthropic.messages.create({
     model: MODEL,
@@ -66,7 +66,7 @@ export const checkContentSafety = async (
 };
 
 export const classifyPrompt = async (
-  prompt: string
+  prompt: string,
 ): Promise<ClassificationResult> => {
   const message = await anthropic.messages.create({
     model: MODEL,

@@ -8,7 +8,7 @@ const BUCKET_NAME = "images";
 
 export const uploadImageFromUrl = async (
   imageUrl: string,
-  filename: string
+  filename: string,
 ): Promise<string> => {
   // Fetch the image from the URL
   const response = await fetch(imageUrl);
@@ -45,7 +45,10 @@ export const deleteImage = async (filename: string): Promise<void> => {
   const { error } = await supabase.storage.from(BUCKET_NAME).remove([filename]);
 
   if (error) {
-    logger.error({ err: error }, "Failed to delete image from Supabase Storage");
+    logger.error(
+      { err: error },
+      "Failed to delete image from Supabase Storage",
+    );
     throw error;
   }
 };

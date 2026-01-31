@@ -109,17 +109,18 @@ export const extractScripts = (content: string): ExtractedScripts => {
     (match) => {
       scripts.push(match);
       return "";
-    }
+    },
   );
 
   return { scripts, contentWithoutScripts };
 };
 
-export const sanitizeHtml = (content: string): string => DOMPurify.sanitize(content, {
-  ALLOWED_TAGS,
-  ALLOWED_ATTR,
-  FORBID_TAGS,
-});
+export const sanitizeHtml = (content: string): string =>
+  DOMPurify.sanitize(content, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+    FORBID_TAGS,
+  });
 
 export const sanitizeContent = (content: string): SanitizeResult => {
   const { scripts, contentWithoutScripts } = extractScripts(content);

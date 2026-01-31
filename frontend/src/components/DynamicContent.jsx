@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
 
-function DynamicContent({ content, contentType = "html", loading, generating }) {
+function DynamicContent({
+  content,
+  contentType = "html",
+  loading,
+  generating,
+}) {
   const contentRef = useRef(null);
 
   useEffect(() => {

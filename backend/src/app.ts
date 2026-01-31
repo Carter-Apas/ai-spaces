@@ -1,4 +1,9 @@
-import express, { Application, Request, Response, RequestHandler } from "express";
+import express, {
+  Application,
+  Request,
+  Response,
+  RequestHandler,
+} from "express";
 import cors from "cors";
 import pinoHttp, { type Options } from "pino-http";
 
