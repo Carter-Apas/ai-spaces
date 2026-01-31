@@ -20,8 +20,10 @@ RUN npm ci --only=production
 COPY --from=builder /app/dist ./dist
 
 ENV NODE_ENV=production
-ENV PORT=3001
 
-EXPOSE 3001
+# Cloud Run sets PORT dynamically, default to 8080 for local testing
+ENV PORT=8080
+
+EXPOSE 8080
 
 CMD ["node", "dist/index.js"]
