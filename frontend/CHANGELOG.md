@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.1](https://github.com/Carter-Apas/ai-spaces/compare/frontend-v0.1.0...frontend-v0.1.1) (2026-01-31)
+
+
+### Bug Fixes
+
+* Frontend deploy args ([01572ff](https://github.com/Carter-Apas/ai-spaces/commit/01572ffcd8a12aadf04be68a5d0f252ab7060b48))
+* Remove nginx ([f10637b](https://github.com/Carter-Apas/ai-spaces/commit/f10637b1cbaceeb4af32c976e695e7cc36b4a769))
+* test ([a084c8c](https://github.com/Carter-Apas/ai-spaces/commit/a084c8cdb1799bf676fa03f2a933947331f5038a))
+
 ## [0.1.0](https://github.com/Carter-Apas/ai-spaces/compare/frontend-v0.0.1...frontend-v0.1.0) (2026-01-31)
 
 
