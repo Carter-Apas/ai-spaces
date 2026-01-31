@@ -22,27 +22,118 @@ body {
 .main {
   display: flex;
   flex: 1;
+  padding: 1rem;
 }
 
-.canvas-container {
-  flex: 1;
-  padding: 1.5rem;
+.loading-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  color: #888;
+}
+
+/* Canvas Grid Layout */
+.canvas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.canvas-wrapper {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1a1a;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  aspect-ratio: 1;
+}
+
+.canvas-wrapper:hover {
+  border-color: #444;
+}
+
+.canvas-wrapper--selected {
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+.canvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.canvas-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #888;
+}
+
+.canvas-wrapper--selected .canvas-label {
+  color: #646cff;
+}
+
+.canvas-remove {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.canvas-remove:hover {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.canvas-add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  aspect-ratio: 1;
+  border: 2px dashed #333;
+  border-radius: 12px;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.canvas-add:hover {
+  border-color: #646cff;
+  color: #646cff;
+  background: rgba(100, 108, 255, 0.05);
 }
 
 .canvas {
   flex: 1;
   background: #fff;
-  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  min-height: 0;
 }
 
 .canvas-content {
   width: 100%;
   height: 100%;
-  min-height: calc(100vh - 3rem);
 }
 
 .canvas-content-wrapper {
@@ -56,7 +147,10 @@ body {
   align-items: center;
   justify-content: center;
   color: #888;
-  min-height: calc(100vh - 3rem);
+  height: 100%;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem;
 }
 
 .canvas-content--image {
@@ -64,13 +158,13 @@ body {
   align-items: center;
   justify-content: center;
   background: #f5f5f5;
-  min-height: calc(100vh - 3rem);
-  padding: 2rem;
+  height: 100%;
+  padding: 1rem;
 }
 
 .canvas-content--image img {
   max-width: 100%;
-  max-height: calc(100vh - 7rem);
+  max-height: 100%;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -166,6 +260,18 @@ body {
 .modal-header h2 {
   font-size: 1.25rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modal-canvas-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  background: rgba(100, 108, 255, 0.15);
+  color: #646cff;
+  border-radius: 6px;
 }
 
 .modal-close {

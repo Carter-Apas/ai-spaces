@@ -51,7 +51,7 @@ function DynamicContent({ content, contentType = "html", loading, generating }) 
             <span>Generating...</span>
           </div>
         ) : (
-          <span>Click the + button to create something</span>
+          <span>Select this canvas and click + to create</span>
         )}
       </div>
     );

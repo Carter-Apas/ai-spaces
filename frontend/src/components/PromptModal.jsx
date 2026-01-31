@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-function PromptModal({ isOpen, onClose, onSubmit, status }) {
+function PromptModal({ isOpen, onClose, onSubmit, status, selectedCanvasId }) {
   const [prompt, setPrompt] = useState("");
   const textareaRef = useRef(null);
 
@@ -39,7 +39,7 @@ function PromptModal({ isOpen, onClose, onSubmit, status }) {
     <div className="modal-backdrop" onClick={handleBackdropClick}>
       <div className="modal">
         <div className="modal-header">
-          <h2>Create with AI</h2>
+          <h2>Create with AI {selectedCanvasId && <span className="modal-canvas-badge">Canvas {selectedCanvasId}</span>}</h2>
           <button className="modal-close" onClick={onClose}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6L6 18M6 6l12 12" />
