@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/Carter-Apas/ai-spaces/compare/backend-v0.1.0...backend-v0.1.1) (2026-01-31)
+
+
+### Bug Fixes
+
+* Backend listen to all ([b3bc478](https://github.com/Carter-Apas/ai-spaces/commit/b3bc4786ba94306dcfd4a81b38b5dc3367b0e147))
+
 ## [0.1.0](https://github.com/Carter-Apas/ai-spaces/compare/backend-v0.0.1...backend-v0.1.0) (2026-01-31)
 
 
