@@ -9,6 +9,7 @@ function App() {
   const [status, setStatus] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [fullscreenCanvasId, setFullscreenCanvasId] = useState(null);
 
   const updateCanvasPage = useCallback((slug, pageData) => {
     setCanvases((prev) => {
@@ -130,6 +131,9 @@ function App() {
 
   const handleCanvasClick = (canvasId) => {
     setSelectedCanvasId(canvasId);
+    if (status !== "loading") {
+      setIsModalOpen(true);
+    }
   };
 
   const addCanvas = () => {
@@ -141,16 +145,21 @@ function App() {
     setSelectedCanvasId(newId);
   };
 
-  const removeCanvas = (canvasId, e) => {
+  const toggleFullscreen = (canvasId, e) => {
     e.stopPropagation();
-    if (canvases.length <= 1) return;
-
-    setCanvases((prev) => prev.filter((c) => c.id !== canvasId));
-    if (selectedCanvasId === canvasId) {
-      const remaining = canvases.filter((c) => c.id !== canvasId);
-      setSelectedCanvasId(remaining[0]?.id);
-    }
+    setFullscreenCanvasId(fullscreenCanvasId === canvasId ? null : canvasId);
   };
+
+  // Handle escape key to exit fullscreen
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && fullscreenCanvasId !== null) {
+        setFullscreenCanvasId(null);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [fullscreenCanvasId]);
 
   if (initialLoading) {
     return (
@@ -174,17 +183,17 @@ function App() {
               key={canvas.id}
               className={`canvas-wrapper ${
                 selectedCanvasId === canvas.id ? "canvas-wrapper--selected" : ""
-              }`}
+              } ${fullscreenCanvasId === canvas.id ? "canvas-wrapper--fullscreen" : ""}`}
               onClick={() => handleCanvasClick(canvas.id)}
             >
               <div className="canvas-header">
                 <span className="canvas-label">Canvas {canvas.id}</span>
-                {canvases.length > 1 && (
-                  <button
-                    className="canvas-remove"
-                    onClick={(e) => removeCanvas(canvas.id, e)}
-                    title="Remove canvas"
-                  >
+                <button
+                  className="canvas-header-btn"
+                  onClick={(e) => toggleFullscreen(canvas.id, e)}
+                  title={fullscreenCanvasId === canvas.id ? "Exit fullscreen" : "Fullscreen"}
+                >
+                  {fullscreenCanvasId === canvas.id ? (
                     <svg
                       width="14"
                       height="14"
@@ -193,10 +202,21 @@ function App() {
                       stroke="currentColor"
                       strokeWidth="2"
                     >
-                      <path d="M18 6L6 18M6 6l12 12" />
+                      <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
                     </svg>
-                  </button>
-                )}
+                  ) : (
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                    </svg>
+                  )}
+                </button>
               </div>
               <div className="canvas">
                 <DynamicContent
@@ -225,24 +245,6 @@ function App() {
           </button>
         </div>
       </main>
-
-      <button
-        className="fab"
-        onClick={() => setIsModalOpen(true)}
-        disabled={status === "loading"}
-        title="Create with AI"
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </button>
 
       <PromptModal
         isOpen={isModalOpen}

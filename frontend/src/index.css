@@ -84,7 +84,7 @@ body {
   color: #646cff;
 }
 
-.canvas-remove {
+.canvas-header-btn {
   background: none;
   border: none;
   color: #666;
@@ -97,9 +97,29 @@ body {
   transition: all 0.2s;
 }
 
-.canvas-remove:hover {
-  color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.1);
+.canvas-header-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Fullscreen mode */
+.canvas-wrapper--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  border-radius: 0;
+  border: none;
+  aspect-ratio: auto;
+}
+
+.canvas-wrapper--fullscreen .canvas {
+  border-radius: 0;
+}
+
+.canvas-wrapper--fullscreen .canvas-content,
+.canvas-wrapper--fullscreen .canvas-content--empty,
+.canvas-wrapper--fullscreen .canvas-content--image {
+  min-height: calc(100vh - 41px);
 }
 
 .canvas-add {
@@ -168,42 +188,6 @@ body {
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Floating Action Button */
-.fab {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #646cff, #535bf2);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(100, 108, 255, 0.4);
-  transition: all 0.2s ease;
-  z-index: 100;
-}
-
-.fab:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 28px rgba(100, 108, 255, 0.5);
-}
-
-.fab:active {
-  transform: scale(0.95);
-}
-
-.fab:disabled {
-  background: #333;
-  box-shadow: none;
-  cursor: not-allowed;
-  transform: none;
 }
 
 /* Modal */
